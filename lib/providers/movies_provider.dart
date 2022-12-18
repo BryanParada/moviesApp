@@ -1,18 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class MoviesProvider extends ChangeNotifier {
-
-  String _apiKey = '840895056f195254dea7bdbadd6075a6';
+ 
+  String _apiKey = dotenv.env['API_KEY'].toString(); 
   String _baseUrl = 'api.themoviedb.org'; //* no hace falta el http ya que Uri lo coloca
   String _language = 'es-ES';
 
   MoviesProvider() {
  
-    print('MoviesProvider init');
-
+    print('MoviesProvider init'); 
     getOntDisplayMovies();
   }
 
