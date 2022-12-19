@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:movies_app/models/models.dart';
+import 'package:movies_app/models/models.dart'; 
 
 class MoviesProvider extends ChangeNotifier {
  
   String _apiKey = dotenv.env['API_KEY'].toString(); 
   String _baseUrl = 'api.themoviedb.org'; //* no hace falta el http ya que Uri lo coloca
   String _language = 'es-ES';
+  bool include_adult = true;
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies   = [];
@@ -27,7 +28,7 @@ class MoviesProvider extends ChangeNotifier {
   //                                             opcional
   Future<String> _getJsonData( String endpoint, [int page = 1]) async{
  
-  var url = Uri.https(_baseUrl, endpoint, {
+  final url = Uri.https(_baseUrl, endpoint, {
         'api_key' : _apiKey,
         'language' : _language,
         'page' : '$page'
@@ -81,6 +82,23 @@ class MoviesProvider extends ChangeNotifier {
 
     return creditsResponse.cast;
   }
+
+  Future<List<Movie>> searchMovie( String query ) async{
+
+ 
+  final url = Uri.https(_baseUrl, '3/search/movie', {
+        'api_key' : _apiKey,
+        'language' : _language, 
+        'include_adult': include_adult
+        });
+
+  final response = await http.get(url);
+  final searchReponse = SearchReponse.fromJson( response.body);
+
+  return searchReponse.results;
+
+  }
+
 
 
 }
