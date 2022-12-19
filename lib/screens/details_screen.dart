@@ -18,7 +18,7 @@ class DetailsScreen extends StatelessWidget {
               delegate: SliverChildListDelegate.fixed([
                 _PosterAndTitle(movie: movie),
                 _Overview(movie: movie), 
-                CastingCards(),
+                CastingCards(movieId: movie.id, ),
               ]),
               )
           ],
