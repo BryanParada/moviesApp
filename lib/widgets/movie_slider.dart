@@ -2,16 +2,48 @@ import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 
-class MovieSlider extends StatelessWidget {
+class MovieSlider extends StatefulWidget {
 
   final List<Movie> movies;
   final String? myTitle;
-
+  final Function onNextPage;
   
   const MovieSlider({
     super.key,
     required this.movies,
-    this.myTitle});
+    required this.onNextPage,
+    this.myTitle
+    });
+
+  @override
+  State<MovieSlider> createState() => _MovieSliderState();
+}
+
+class _MovieSliderState extends State<MovieSlider> {
+
+final ScrollController scrollController = new ScrollController();
+
+
+//codigo que se ejecuta una vez que es construido
+  @override
+  void initState() {
+    super.initState();
+    
+    scrollController.addListener(() {
+
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 500)
+        widget.onNextPage();
+
+     });
+
+  }
+
+//cuando el widget sera destruido
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +54,24 @@ class MovieSlider extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start,
        children: [
         
-        if(myTitle != null) 
+        if(widget.myTitle != null) 
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(myTitle!,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(widget.myTitle!,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
         const SizedBox(
           height: 5,
         ),
         Expanded( 
           child: ListView.builder(
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
-              itemCount: movies.length,
+              itemCount: widget.movies.length,
               // itemBuilder: ( _ , int index){
               //   return _MoviePoster();
               // },
-              itemBuilder: (_, int index) => _MoviePoster( movie: movies[index] )),
+              itemBuilder: (_, int index) => _MoviePoster( movie: widget.movies[index] )),
         ),
       ]),
     );
