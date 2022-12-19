@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../models/models.dart';
+
 class MovieSlider extends StatelessWidget {
-  const MovieSlider({super.key});
+
+  final List<Movie> movies;
+  final String? myTitle;
+
+  
+  const MovieSlider({
+    super.key,
+    required this.movies,
+    this.myTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -9,23 +19,26 @@ class MovieSlider extends StatelessWidget {
       width: double.infinity,
       height: 260,
       //color: Colors.red,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Padding(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+       children: [
+        
+        if(myTitle != null) 
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text('Populares',
+          child: Text(myTitle!,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
-        Expanded(
+        Expanded( 
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 20,
+              itemCount: movies.length,
               // itemBuilder: ( _ , int index){
               //   return _MoviePoster();
               // },
-              itemBuilder: (_, int index) => _MoviePoster()),
+              itemBuilder: (_, int index) => _MoviePoster( movie: movies[index] )),
         ),
       ]),
     );
@@ -34,7 +47,12 @@ class MovieSlider extends StatelessWidget {
 
 //_ privado
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({super.key});
+ 
+  final Movie movie;
+
+  const _MoviePoster({
+    super.key,
+    required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -45,22 +63,25 @@ class _MoviePoster extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
+
+            
+
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, 'details',
                   arguments: 'movie-instance'),
               child: ClipRRect(
                 //para borderradius
                 borderRadius: BorderRadius.circular(20),
-                child: FadeInImage(
+                child:  FadeInImage(
                     placeholder: AssetImage('assets/no-image.jpg'),
-                    image: NetworkImage('https://via.placeholder.com/300x400'),
+                    image: NetworkImage(movie.fullPosterImg),  
                     width: 130,
                     height: 190,
                     fit: BoxFit.cover),
               ),
             ),
-            Text(
-              'Star Wars: El retorno de el nuevo jedi silvestre de monte cristo',
+             Text(
+              movie.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
