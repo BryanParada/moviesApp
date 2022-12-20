@@ -179,9 +179,16 @@ return FutureBuilder(
   
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child:TrailerYoutube(trailerId: trailer),
+          child: Column(
+            children: [
+              TrailerYoutube(trailerId: trailer),
+              SizedBox(height: 10),
+              Text("Reparto", style: TextStyle(fontSize: 20)),
+            ]
+          ),
         );
-      },
+      }
+         
     );
   }
 }
