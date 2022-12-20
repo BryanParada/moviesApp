@@ -17,6 +17,7 @@ class MoviesProvider extends ChangeNotifier {
   List<Movie> popularMovies   = [];
 
   Map<int, List<Cast>> moviesCast = {};
+  Map<int, List<Result>> trailers = {};
 
   int _popularPage = 0;
 
@@ -124,6 +125,27 @@ class MoviesProvider extends ChangeNotifier {
      });
 
     Future.delayed(Duration( milliseconds: 301) ).then(( _ ) => timer.cancel());
+  }
+
+  getTrailerMovie(int movieId) async {
+ 
+
+    final jsonData = await _getJsonData('/3/movie/${movieId}/videos' );  
+    final trailerResponse = TrailerReponse.fromJson( jsonData );
+
+    print('MOVIE ID=======$movieId');
+ 
+    trailers[movieId] = trailerResponse.results;
+    
+    //print(trailers[movieId]);
+    //print('trailer aqui! '+trailerResponse.results[0].key);
+    // if(trailerResponse.results.isEmpty){ 
+    //   return [];
+    // }
+     
+    return trailerResponse.results[0].key;
+
+
   }
 
 

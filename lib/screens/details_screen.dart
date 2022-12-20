@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/models/models.dart';
+import 'package:movies_app/providers/movies_provider.dart';
 import 'package:movies_app/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({super.key});
@@ -18,6 +21,7 @@ class DetailsScreen extends StatelessWidget {
               delegate: SliverChildListDelegate.fixed([
                 _PosterAndTitle(movie: movie),
                 _Overview(movie: movie), 
+                Trailer(movieId: movie.id),
                 CastingCards(movieId: movie.id, ),
               ]),
               )
@@ -148,3 +152,75 @@ class _Overview extends StatelessWidget {
   }
 }
 
+
+class Trailer extends StatelessWidget {
+  final int movieId;
+  const Trailer({
+    super.key,
+   required this.movieId});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+
+return FutureBuilder(
+       future: moviesProvider.getTrailerMovie(movieId), 
+      builder: ( _ , AsyncSnapshot<dynamic> snapshot) {
+        
+      if(!snapshot.hasData){
+        return Container(
+          constraints: BoxConstraints(maxWidth: 150),
+          height: 180, 
+        );
+      }
+
+      final String trailer = snapshot.data!;
+  
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child:TrailerYoutube(trailerId: trailer),
+        );
+      },
+    );
+  }
+}
+
+
+class TrailerYoutube extends StatefulWidget {
+  final String trailerId;
+   
+  const TrailerYoutube({
+    super.key,
+   required this.trailerId});
+    
+  @override
+  State<TrailerYoutube> createState() => _TrailerYoutubeState();
+}
+
+class _TrailerYoutubeState extends State<TrailerYoutube> {
+  
+  @override
+  void initState() { 
+    super.initState();  
+  }  
+    late final YoutubePlayerController _controllerYT = YoutubePlayerController(
+      initialVideoId: widget.trailerId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        loop: true,
+        mute: false,
+      )
+    ); 
+  
+  @override
+  Widget build(BuildContext context) { 
+    return 
+       YoutubePlayer(
+              controller: _controllerYT, 
+              showVideoProgressIndicator: false,
+            ); 
+  }
+
+
+}
