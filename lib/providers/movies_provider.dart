@@ -1,16 +1,17 @@
-import 'dart:convert';
+import 'dart:async'; 
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:movies_app/helpers/debouncer.dart';
 import 'package:movies_app/models/models.dart'; 
 
 class MoviesProvider extends ChangeNotifier {
  
-  String _apiKey = dotenv.env['API_KEY'].toString(); 
-  String _baseUrl = 'api.themoviedb.org'; //* no hace falta el http ya que Uri lo coloca
-  String _language = 'es-ES';
-  bool include_adult = true;
+  final String _apiKey = dotenv.env['API_KEY'].toString(); 
+  final String _baseUrl = 'api.themoviedb.org'; //* no hace falta el http ya que Uri lo coloca
+  final String _language = 'es-ES';
+  bool includeAdult = true;
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies   = [];
@@ -19,10 +20,17 @@ class MoviesProvider extends ChangeNotifier {
 
   int _popularPage = 0;
 
+  final debouncer = Debouncer(
+    duration: Duration( milliseconds: 500 ), 
+    );
+
+  final StreamController<List<Movie>> _suggestionStreamController = new StreamController.broadcast();
+  Stream<List<Movie>> get suggestionStream => this._suggestionStreamController.stream;
+
   MoviesProvider() {
  
     //print('MoviesProvider init'); 
-    getOntDisplayMovies();
+    getOnDisplayMovies();
     getPopularMovies();
   }
   //                                             opcional
@@ -39,10 +47,10 @@ class MoviesProvider extends ChangeNotifier {
    return response.body;
   }
 
-  getOntDisplayMovies() async {
+  getOnDisplayMovies() async {
 
     final jsonData = await _getJsonData('/3/movie/now_playing' ); 
-    final nowPlayingResponse = NowPlayingReponse.fromJson(jsonData);
+    final nowPlayingResponse = NowPlayingResponse.fromJson(jsonData);
     
     // if(response.statusCode != 200) return print('error');
     //final decodedData = json.decode(response.body) as Map<String, dynamic>;
@@ -60,7 +68,7 @@ class MoviesProvider extends ChangeNotifier {
     _popularPage++;
 
     final jsonData = await _getJsonData('/3/movie/popular', _popularPage);  
-    final popularResponse = PopularReponse.fromJson(jsonData);
+    final popularResponse = PopularResponse.fromJson(jsonData);
    
     popularMovies = [...popularMovies, ...popularResponse.results];
     //print(popularMovies[0]);
@@ -86,17 +94,36 @@ class MoviesProvider extends ChangeNotifier {
   Future<List<Movie>> searchMovie( String query ) async{
 
  
-  final url = Uri.https(_baseUrl, '3/search/movie', {
-        'api_key' : _apiKey,
-        'language' : _language, 
-        'include_adult': include_adult
-        });
+      final url = Uri.https(_baseUrl, '3/search/movie', {
+            'api_key' : _apiKey,
+            'language' : _language, 
+      'query': query
+            });
 
-  final response = await http.get(url);
-  final searchReponse = SearchReponse.fromJson( response.body);
+      final response = await http.get(url);
+      final searchResponse = SearchResponse.fromJson( response.body);
 
-  return searchReponse.results;
+      return searchResponse.results;
 
+  }
+
+  void getSuggestionByQuery( String searchTerm){
+
+    debouncer.value = '';
+    debouncer.onValue = ( value ) async {
+
+      print('tenemos valor a buscar: $value');
+      final results = await this.searchMovie(value);
+      this._suggestionStreamController.add( results );
+    };
+
+    final timer = Timer.periodic(Duration( milliseconds: 300), ( _ ) {
+
+      debouncer.value = searchTerm;
+
+     });
+
+    Future.delayed(Duration( milliseconds: 301) ).then(( _ ) => timer.cancel());
   }
 
 
