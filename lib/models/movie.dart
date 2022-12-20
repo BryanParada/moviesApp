@@ -33,6 +33,8 @@ class Movie {
     double voteAverage;
     int voteCount;
 
+    String? heroId;
+
     //Manual getter!
     get fullPosterImg {
       if (posterPath != null)

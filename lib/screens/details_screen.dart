@@ -44,21 +44,21 @@ class _CustomAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        titlePadding: EdgeInsets.all(0),
+        titlePadding: const EdgeInsets.all(0),
         title: Container(
           width: double.infinity,
           alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.only(bottom:10, left: 10, right: 10),
+          padding: const EdgeInsets.only(bottom:10, left: 10, right: 10),
           color: Colors.black12,
           child: Text(
             movie.title,
-            style: TextStyle( fontSize: 16),
+            style: const TextStyle( fontSize: 16),
             textAlign: TextAlign.center,
             )
         ),
 
         background: FadeInImage(
-            placeholder: AssetImage('assets/loading.gif'),
+            placeholder: const AssetImage('assets/loading.gif'),
             image: NetworkImage(movie.fullBackdropPath),
             fit: BoxFit.cover),
       ),
@@ -86,14 +86,17 @@ class _PosterAndTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric( horizontal: 20),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: FadeInImage(
-              placeholder: AssetImage('assets/no-image.jpg'),
-              image: NetworkImage(movie.fullPosterImg), //'https://via.placeholder.com/200x300'
-              height: 150
-
-            )
+          Hero(
+            tag: movie.heroId!,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(movie.fullPosterImg), //'https://via.placeholder.com/200x300'
+                height: 150,  
+          
+              )
+            ),
           ),
 
           const SizedBox( width: 20, ),

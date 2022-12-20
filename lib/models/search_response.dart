@@ -1,13 +1,13 @@
 // To parse this JSON data, do
 //
-//     final searchReponse = searchReponseFromMap(jsonString);
+//     final searchResponse = searchResponseFromMap(jsonString);
 
 import 'dart:convert';
 
 import 'models.dart';
 
-class SearchReponse {
-    SearchReponse({
+class SearchResponse {
+    SearchResponse({
         required this.page,
         required this.results,
         required this.totalPages,
@@ -19,9 +19,9 @@ class SearchReponse {
     int totalPages;
     int totalResults;
 
-    factory SearchReponse.fromJson(String str) => SearchReponse.fromMap(json.decode(str));
+    factory SearchResponse.fromJson(String str) => SearchResponse.fromMap(json.decode(str));
  
-    factory SearchReponse.fromMap(Map<String, dynamic> json) => SearchReponse(
+    factory SearchResponse.fromMap(Map<String, dynamic> json) => SearchResponse(
         page: json["page"],
         results: List<Movie>.from(json["results"].map((x) => Movie.fromMap(x))),
         totalPages: json["total_pages"],
