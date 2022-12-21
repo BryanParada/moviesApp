@@ -82,12 +82,23 @@ class _CastCard extends StatelessWidget {
   
           const SizedBox(height: 5,),
 
-          Text(
-            actor.name,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-          )
+          
+          Flexible(
+            child: new Container( 
+              child: new Text(
+                actor.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          // Text(
+          //   actor.name,
+          //   maxLines: 2,
+          //   overflow: TextOverflow.ellipsis,
+          //   textAlign: TextAlign.center,
+          // )
       ]),
     );
   }
