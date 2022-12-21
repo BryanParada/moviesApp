@@ -10,7 +10,7 @@ class MoviesProvider extends ChangeNotifier {
  
   final String _apiKey = dotenv.env['API_KEY'].toString(); 
   final String _baseUrl = 'api.themoviedb.org'; //* no hace falta el http ya que Uri lo coloca
-  final String _language = 'es-ES';
+  final String _language = 'es-MX';
   bool includeAdult = true;
 
   List<Movie> onDisplayMovies = [];
