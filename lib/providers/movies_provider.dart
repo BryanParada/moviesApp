@@ -128,20 +128,15 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   getTrailerMovie(int movieId) async {
- 
-
+  
     final jsonData = await _getJsonData('/3/movie/${movieId}/videos' );  
     final trailerResponse = TrailerReponse.fromJson( jsonData );
-
-    print('MOVIE ID=======$movieId');
  
-    trailers[movieId] = trailerResponse.results;
-    
-    //print(trailers[movieId]);
-    //print('trailer aqui! '+trailerResponse.results[0].key);
-    // if(trailerResponse.results.isEmpty){ 
-    //   return [];
-    // }
+    if (trailerResponse.results.isEmpty) { 
+      return null; 
+    }
+
+    trailers[movieId] = trailerResponse.results; 
      
     return trailerResponse.results[0].key;
 

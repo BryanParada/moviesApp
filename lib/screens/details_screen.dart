@@ -169,10 +169,15 @@ return FutureBuilder(
       builder: ( _ , AsyncSnapshot<dynamic> snapshot) {
         
       if(!snapshot.hasData){
-        return Container(
-          constraints: BoxConstraints(maxWidth: 150),
-          height: 180, 
-        );
+          return Container(
+            constraints: BoxConstraints(maxWidth: 150), 
+            child: Column(
+              children: [
+              Text("Reparto", style: TextStyle(fontSize: 20)),
+               SizedBox(height: 10),
+              ]
+            )
+          );
       }
 
       final String trailer = snapshot.data!;
