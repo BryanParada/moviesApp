@@ -4,9 +4,11 @@ A movie app for searching movies made in Flutter.
 
 Demo video: https://youtube.com/shorts/tn6dSx0BA9Y?feature=share   
 
+<div class="row"> 
 <img src="https://user-images.githubusercontent.com/51382458/208758217-f42c52ce-d3fe-4cb3-95fd-7e518c74c007.png" width="300" />
 <img src="https://user-images.githubusercontent.com/51382458/208758262-fa4eb028-4f76-4988-be91-5673995538b1.png" width="300" />
 <img src="https://user-images.githubusercontent.com/51382458/208758288-9b643ee6-a41a-4609-a401-19dc1308e934.png" width="300" />
+</div>
 
 ## Features 
 - Search movies
